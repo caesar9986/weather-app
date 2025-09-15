@@ -1,0 +1,78 @@
+:root {
+  font-family: system-ui, Oswald, Avenir, Helvetica, Arial, sans-serif;
+  line-height: 1.5;
+  font-weight: 400;
+
+  --background-color: #fff;
+  --text-color: #fff;
+  --primary-color: #007bff; 
+  --svg-filter: brightness(0) invert(1);
+  color-scheme: light dark;
+
+  font-synthesis: none;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+body {
+  background-color: var(--background-color);
+  font-family: Oswald;
+  margin: 0;
+  min-width: 320px;
+  min-height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 90px;
+}
+
+.box-style {
+  width: 300px;
+  height: 300px;
+  padding: 10px;
+  background-color: #242424;
+  border-radius: 10%;
+  display: grid;
+  grid-template: repeat(3, 1fr) / repeat(2, 1fr);
+  justify-items: center;
+  color: var(--text-color);
+}
+
+.icons-weather {
+  filter: var(--svg-filter);
+}
+
+.parameters-box {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+.flex-box {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.temperature {
+  grid-column: 2 span;
+  font-size: 36px;
+}
+
+.description-main {
+  grid-column: 2 span;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --background-color: #242424;
+    --text-color: #242424;
+    --primary-color: #007bff;
+    --svg-filter: brightness(0);
+  }
+  .box-style {
+    background-color: #fff;
+  }
+}
