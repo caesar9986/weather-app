@@ -11,7 +11,7 @@ type TCities = {
 type TCords = {
   latitude: string;
   longitude: string;
-}
+};
 
 type TWeather = {
   current: string;
@@ -28,7 +28,7 @@ type ResponseData = {
   time: string;
   description_main: string;
   icon_weather: string;
-}
+};
 
 // Массив данных городов
 const citiesParametrs: TCities[] = [
@@ -36,33 +36,33 @@ const citiesParametrs: TCities[] = [
     title: "Koszalin",
     cords: {
       latitude: "54.1944",
-      longitude: "16.1722"
+      longitude: "16.1722",
     },
-    timezone: "Europe/Berlin"
+    timezone: "Europe/Berlin",
   },
   {
     title: "Oslo",
     cords: {
       latitude: "59.9127",
-      longitude: "10.7461"
+      longitude: "10.7461",
     },
-    timezone: "Europe/London"
+    timezone: "Europe/London",
   },
   {
     title: "New York",
     cords: {
       latitude: "40.710335",
-      longitude: "-73.99309"
+      longitude: "-73.99309",
     },
-    timezone: "America/New_York"
-  }
-]
+    timezone: "America/New_York",
+  },
+];
 
 // Поиск контейнера для загрузки карточек
 const mainBox = document.querySelector(".main-box");
 
 // Функция для обработки информации с API
-async function loadData (cities: TCities) {
+async function loadData(cities: TCities) {
   // Объект с базовыми параметрами для всех карточек
   const baseParametrs: TWeather = {
     current: [
@@ -73,60 +73,68 @@ async function loadData (cities: TCities) {
       "weather_code",
     ].join(","),
     forecast_days: "1",
-    wind_speed_unit: "ms"
-  }
+    wind_speed_unit: "ms",
+  };
 
   // Fetch
   const searchParams = new URLSearchParams({
     ...baseParametrs,
     ...cities.cords,
-    timezone: cities.timezone
-  })
+    timezone: cities.timezone,
+  });
 
-  const requestResponse = await fetch(
-    `https://api.open-meteo.com/v1/forecast?${searchParams}`,
-    {
-      method: "GET",
-    }
-  );
+  try {
+    const requestResponse = await fetch(
+      `https://api.open-meteo.com/v1/forecast?${searchParams}`,
+      {
+        method: "GET",
+      },
+    );
 
-  const requestData = await requestResponse.json();
+    const requestData = await requestResponse.json();
 
-  // Проверка на тему браузера(светлая или темная)
-  const isDarkTheme = window.matchMedia(
-      "(prefers-color-scheme: dark)"
+    // Проверка на тему браузера(светлая или темная)
+    const isDarkTheme = window.matchMedia(
+      "(prefers-color-scheme: dark)",
     ).matches;
-  const theme = isDarkTheme ? "night" : "day";
+    const theme = isDarkTheme ? "night" : "day";
 
-  // Подстановка данных из descriptions.json
-  const weatherCode =
-    requestData.current.weather_code.toString() as keyof typeof descriptionWeatherCode;
-  const weatherIcon = descriptionWeatherCode[weatherCode][theme].image;
-  const weatherName = descriptionWeatherCode[weatherCode][theme].description;
+    // Подстановка данных из descriptions.json
+    const weatherCode =
+      requestData.current.weather_code.toString() as keyof typeof descriptionWeatherCode;
+    const weatherIcon = descriptionWeatherCode[weatherCode][theme].image;
+    const weatherName = descriptionWeatherCode[weatherCode][theme].description;
 
-  const date = new Date(requestData.current.time);
+    const date = new Date();
 
-  const requestDataForClient: ResponseData = {
-    city: cities.title,
-    temperature: `${requestData.current.temperature_2m} ${requestData.current_units.temperature_2m}`,
-    relative_humidity: `${requestData.current.relative_humidity_2m} ${requestData.current_units.relative_humidity_2m}`,
-    precipitation: `${requestData.current.precipitation} ${requestData.current_units.precipitation}`,
-    wind_speed: `${requestData.current.wind_speed_10m} ${requestData.current_units.wind_speed_10m}`,
-    time: date.getHours() + ":" + date.getMinutes().toString().padStart(2, "0"),
-    description_main: weatherName,
-    icon_weather: weatherIcon
+    // Создание объекта с данными
+    const requestDataForClient: ResponseData = {
+      city: cities.title,
+      temperature: `${requestData.current.temperature_2m} ${requestData.current_units.temperature_2m}`,
+      relative_humidity: `${requestData.current.relative_humidity_2m} ${requestData.current_units.relative_humidity_2m}`,
+      precipitation: `${requestData.current.precipitation} ${requestData.current_units.precipitation}`,
+      wind_speed: `${requestData.current.wind_speed_10m} ${requestData.current_units.wind_speed_10m}`,
+      time:
+        date.getHours() + ":" + date.getMinutes().toString().padStart(2, "0"),
+      description_main: weatherName,
+      icon_weather: weatherIcon,
+    };
+    return requestDataForClient;
+  } catch (error) {
+    console.error(`Ошибка ${error} получения данных с сайта open-meteo`);
+    return;
   }
-
-  return requestDataForClient
 }
 
 // Функция для подстановки данных в DOM дерево
 async function init() {
   const forecasts = await Promise.all(
-    citiesParametrs.map(city => loadData(city))
-  )
+    citiesParametrs.map((city) => loadData(city)),
+  );
 
-  const forecastData = forecasts.map(forecast => createBox(forecast));
+  const forecastData = forecasts
+    .filter((forecasts): forecasts is ResponseData => forecasts !== null)
+    .map((forecast) => createBox(forecast));
 
   if (mainBox) {
     mainBox.innerHTML = "";
@@ -135,7 +143,6 @@ async function init() {
 }
 
 // Функция для создания контейнера в DOM дереве
-// ВАЖНО!!! Вставить картинки
 function createBox(request: ResponseData) {
   return `<div class="box-style">
     <div class="city">${request.city}</div>
@@ -143,9 +150,9 @@ function createBox(request: ResponseData) {
     <div class="temperature">${request.temperature}</div>
     <div class="description-main">${request.description_main}</div>
     <div class="parameters-box">
-      <div class="relative-humidity flex-box"><img src="" class="parameters-icons"><span class="relative-humidity-info">${request.relative_humidity}</span></div>
-      <div class="precipitation flex-box"><img src="" class="parameters-icons"><span class="precipitation-info">${request.precipitation}</span></div>
-      <div class="wind-speed flex-box"><img src="" class="parameters-icons"><span class="wind-speed-info">${request.wind_speed}</span></div>
+      <div class="relative-humidity flex-box"><img src="../public/droplet.svg" class="parameters-icons"><span class="relative-humidity-info">${request.relative_humidity}</span></div>
+      <div class="precipitation flex-box"><img src="../public/cloud-hail.svg" class="parameters-icons"><span class="precipitation-info">${request.precipitation}</span></div>
+      <div class="wind-speed flex-box"><img src="../public/wind.svg" class="parameters-icons"><span class="wind-speed-info">${request.wind_speed}</span></div>
     </div>
     <img src="${request.icon_weather}" class="icon-weather">
   </div>`;
@@ -153,4 +160,4 @@ function createBox(request: ResponseData) {
 
 init();
 
-setInterval(init, 6000);
+setInterval(init, 60000);

@@ -13,6 +13,7 @@
 * globals: "16.4.0"
 * jiti: "2.6.0"
 * TypeScript-eslint: "8.44.1"
+* Prettier: "3.6.2"
 
 
 ### Git clone
@@ -42,9 +43,17 @@ npm install
 
 * Предварительный просмотр
     ```
-    npm preview
+    npm run preview
     ```
 * Проверка на ошибки
     ```
-    npm lint
+    npm run lint
+    ```
+* Исправление ошибок
+    ```
+    npm run lint:fix
+    ```
+* Форматирование кода
+    ```
+    npm run prettier
     ```
