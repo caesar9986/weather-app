@@ -104,7 +104,7 @@ async function loadData (cities: TCities) {
   const weatherIcon = descriptionWeatherCode[weatherCode][theme].image;
   const weatherName = descriptionWeatherCode[weatherCode][theme].description;
 
-  let date = new Date(requestData.current.time);
+  const date = new Date(requestData.current.time);
 
   const requestDataForClient: ResponseData = {
     city: cities.title,

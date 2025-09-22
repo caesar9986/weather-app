@@ -8,6 +8,12 @@
 
 * TypeScript: "5.8.3"
 * vite: "7.1.2"
+* @eslint/js: "9.36.0"
+* eslint: "9.36.0"
+* globals: "16.4.0"
+* jiti: "2.6.0"
+* TypeScript-eslint: "8.44.1"
+
 
 ### Git clone
 
@@ -37,4 +43,8 @@ npm install
 * Предварительный просмотр
     ```
     npm preview
+    ```
+* Проверка на ошибки
+    ```
+    npm lint
     ```
