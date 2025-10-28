@@ -1,10 +1,10 @@
 # Weather App
 
-Проект о погоде с использованием API, на данный момент в проекте есть 3 карточки с информацией о погоде в трех разных городах, проект является гибким, можно добавить еще карточки, без особого изменения кода
+A weather project using an API. Currently, the project displays three weather cards for three different cities. The project is flexible — you can easily add more cards without making significant changes to the code.
 
-Проект является публичным
+The project is public.
 
-### Ресурсы проекта:
+### Project dependencies:
 
 * TypeScript: "5.8.3"
 * vite: "7.1.2"
@@ -22,38 +22,38 @@
 https://github.com/caesar9986/weather-app.git
 ```
 
-### Установка зависимости
+### Install dependencies
 
 ```
 npm install
 ```
 
-### Встроенные скрипты:
+### Available scripts:
 
-* Запуск проекта
+* Run the project
     ```
     npm run dev
     ```
-* Создание проекта(компиляция)
+* Build the project (compile)
     ```
     npm run build
     ```
 
-    проект будет скомпилирован в папку dist
+    The project will be compiled into the dist folder.
 
-* Предварительный просмотр
+* Preview build
     ```
     npm run preview
     ```
-* Проверка на ошибки
+* Lint check
     ```
     npm run lint
     ```
-* Исправление ошибок
+* Fix lint errors
     ```
     npm run lint:fix
     ```
-* Форматирование кода
+* Format code
     ```
     npm run prettier
     ```
